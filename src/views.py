@@ -1,11 +1,11 @@
 import os
 from datetime import datetime
-from src.utils import read_excel
+
 import pandas as pd
 import requests
 from dotenv import load_dotenv
-from src.utils import welcome_message
-from src.utils import open_user_setting
+
+from src.utils import open_user_setting, read_excel, welcome_message
 
 
 date_and_time = "04.10.2021"
@@ -41,8 +41,8 @@ def filter_card(date_and_time):
             card_df = fd[fd["Номер карты"].isna()]
         else:
             card_df = fd[fd["Номер карты"] == card]
-        amount_expenses = card_df[card_df["Сумма операции"]<0]["Сумма операции"].sum()
-        total_spent = round(float(amount_expenses),2)
+        amount_expenses = card_df[card_df["Сумма операции"] < 0]["Сумма операции"].sum()
+        total_spent = round(float(amount_expenses), 2)
         cashback = (round(total_spent/100, 2))*-1
 
         cards_data.append({
@@ -89,9 +89,9 @@ def request_currencies():
         r = requests.get(url)
         data = r.json()
         company_rate.append({
-        "currency": company,
-        "rate": data["Global Quote"]["05. price"]
-        })
+                             "currency": company,
+                            "rate": data["Global Quote"]["05. price"]
+                            })
     return company_rate
 
 
