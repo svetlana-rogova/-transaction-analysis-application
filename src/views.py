@@ -25,3 +25,25 @@ def filter_date(date_and_time):
     filtered = df[(filter >= start) & (filter <= end)]
     return filtered
 
+
+def filter_card(date_and_time):
+    """Функция фильтрует данные по картам и выводит список словарей с номерами карт и данными по ним"""
+    fd = filter_date(date_and_time).copy()
+    fd["Номер карты"] = fd["Номер карты"].replace(r'^\s*$', float("nan"))
+    cards = set(fd["Номер карты"])
+    cards_data = []
+    for card in cards:
+        if pd.isna(card):
+            card_df = fd[fd["Номер карты"].isna()]
+        else:
+            card_df = fd[fd["Номер карты"] == card]
+        amount_expenses = card_df[card_df["Сумма операции"]<0]["Сумма операции"].sum()
+        total_spent = round(float(amount_expenses),2)
+        cashback = (round(total_spent/100, 2))*-1
+
+        cards_data.append({
+            "last_digits": card,
+            "total_spent": total_spent,
+            "cashback": cashback
+        })
+    return cards_data
