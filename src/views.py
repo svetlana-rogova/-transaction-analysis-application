@@ -2,6 +2,10 @@ import os
 from datetime import datetime
 from src.utils import read_excel
 import pandas as pd
+import requests
+from dotenv import load_dotenv
+from src.utils import welcome_message
+from src.utils import open_user_setting
 
 
 date_and_time = "04.10.2021"
@@ -65,3 +69,55 @@ def top_five_transactions(date_and_time):
         })
     return conclusion
 
+
+"""Читаем наш API ключ для доступа к данным на стороннем сервере"""
+load_dotenv()
+API_KEY = os.getenv("API_KEY")
+headers = {"apikey": API_KEY}
+API_KEY_TWO = os.getenv("API_KEY_TWO")
+headers_two = {"apikey": API_KEY_TWO}
+
+
+currencies, stocks = open_user_setting()
+
+
+def request_currencies():
+    """Получаем ценs акций из пользовательского списка"""
+    company_rate = []
+    for company in stocks:
+        url = f'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol={company}&apikey=headers'
+        r = requests.get(url)
+        data = r.json()
+        company_rate.append({
+        "currency": company,
+        "rate": data["Global Quote"]["05. price"]
+        })
+    return company_rate
+
+
+def currency_rate():
+    """Получаем курсы валют из пользовательского списка"""
+    list_currency = []
+    for currency in currencies:
+        url = f"https://api.apilayer.com/currency_data/live?source={currency}&currencies=RUB"
+        response = requests.get(url, headers=headers_two)
+        if response.status_code == 200:
+            data = response.json()
+            list_currency.append({
+                "currency": currency,
+                "rate": list(data['quotes'].values())[0]
+            })
+        else:
+            return f"Ошибка {response.status_code}"
+    return list_currency
+
+
+result = {
+    "greeting": welcome_message(),
+    "cards": filter_card(date_and_time),
+    "top_transactions": top_five_transactions(date_and_time),
+    "currency_rates": currency_rate(),
+    "stock_prices": request_currencies()
+
+}
+print(result)
