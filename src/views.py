@@ -1,6 +1,7 @@
 import os
 from datetime import datetime
 from src.utils import read_excel
+import pandas as pd
 
 
 date_and_time = "04.10.2021"
@@ -15,4 +16,12 @@ def get_date_interval(date_and_time):
     start = end.replace(day=1, hour=0, minute=0, second=0)
     dates = start, end
     return dates
+
+
+def filter_date(date_and_time):
+    """Фильтруем наши данные по нужному интервалу дат"""
+    start, end = get_date_interval(date_and_time)
+    filter = pd.to_datetime(df["Дата операции"], format="%d.%m.%Y %H:%M:%S")
+    filtered = df[(filter >= start) & (filter <= end)]
+    return filtered
 
