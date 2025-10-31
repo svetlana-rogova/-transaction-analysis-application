@@ -7,7 +7,6 @@ from dotenv import load_dotenv
 
 from src.utils import open_user_setting, read_excel, welcome_message
 
-
 date_and_time = "04.10.2021"
 file = os.path.join(os.path.dirname(__file__), "..", "data", "operations.xlsx")
 df = read_excel(file)
@@ -54,6 +53,7 @@ def filter_card(date_and_time):
 
 
 def top_five_transactions(date_and_time):
+    """Функция возвращает список словарей с топ 5 категорий по сумме трат"""
     fd = filter_date(date_and_time)
     transactions_df = fd.groupby(["Категория", "Описание", "Дата платежа"])["Сумма операции с округлением"].sum()
     sort_transactions_df = transactions_df.sort_values(ascending=False)
