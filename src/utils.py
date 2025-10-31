@@ -62,3 +62,14 @@ def open_user_setting():
         return "Файл не найден"
 
 
+def decorator_write(func):
+    def wrapper(*args, **kwargs):
+        place = os.path.join(os.path.dirname(__file__), "..", "data")
+        filename = f"{func.__name__}.json"
+        file_inf = os.path.join(place, filename)
+        write_file = func(*args, **kwargs)
+        write_file["Дата операции"] = write_file["Дата операции"].dt.strftime("%d.%m.%Y %H:%M:%S")
+        write_file = write_file.to_json(force_ascii=False, orient="records", indent=4)
+        with open(file_inf, "w", encoding="utf-8") as f:
+            f.write(write_file)
+    return wrapper
