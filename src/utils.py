@@ -1,18 +1,12 @@
 import json
-import logging
 import os
 from datetime import datetime
 
 import pandas as pd
 
-log_path = os.path.join(os.path.dirname(__file__), "../logs/utils.log")
-logger = logging.getLogger(__name__)
-file_handler = logging.FileHandler(log_path, "w", encoding="utf-8")
-file_formatter = logging.Formatter("%(asctime)s %(filename)s %(funcName)s %(levelname)s %(message)s")
-file_handler.setFormatter(file_formatter)
-logger.addHandler(file_handler)
-logger.setLevel(logging.DEBUG)
+from logger_config import logger_setting
 
+logger = logger_setting("utils")
 
 file = os.path.join(os.path.dirname(__file__), "..", "data", "operations.xlsx")
 
@@ -72,4 +66,5 @@ def decorator_write(func):
         write_file = write_file.to_json(force_ascii=False, orient="records", indent=4)
         with open(file_inf, "w", encoding="utf-8") as f:
             f.write(write_file)
+            logger.info("Файл создан и в него записаны необходимые данные")
     return wrapper

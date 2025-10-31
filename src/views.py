@@ -5,27 +5,32 @@ import pandas as pd
 import requests
 from dotenv import load_dotenv
 
+from logger_config import logger_setting
 from src.utils import open_user_setting, read_excel, welcome_message
 
-date_and_time = "04.10.2021"
+logger = logger_setting("views")
+
+date_and_time = "04.10.2021 12:10:06"
 file = os.path.join(os.path.dirname(__file__), "..", "data", "operations.xlsx")
 df = read_excel(file)
 
 
 def get_date_interval(date_and_time):
     """Функция рассчитывает нужный интервал, получая дату"""
-    end = datetime.strptime(date_and_time, "%d.%m.%Y")
+    end = datetime.strptime(date_and_time, "%d.%m.%Y %H:%M:%S")
     end = end.replace(hour=23, minute=59, second=59)
     start = end.replace(day=1, hour=0, minute=0, second=0)
     dates = start, end
+    logger.info(f"Получаем интервал дат для расчета {dates}")
     return dates
 
 
 def filter_date(date_and_time):
     """Фильтруем наши данные по нужному интервалу дат"""
     start, end = get_date_interval(date_and_time)
-    filter = pd.to_datetime(df["Дата операции"], format="%d.%m.%Y %H:%M:%S")
-    filtered = df[(filter >= start) & (filter <= end)]
+    date_format = pd.to_datetime(df["Дата операции"], format="%d.%m.%Y %H:%M:%S")
+    filtered = df[(date_format >= start) & (date_format <= end)]
+    logger.info("Выводится файл с отфильтрованными данными по датам, расчитанным ранее")
     return filtered
 
 
@@ -37,6 +42,7 @@ def filter_card(date_and_time):
     cards_data = []
     for card in cards:
         if pd.isna(card):
+            logger.info("В файле есть операции без номеров карт, они будут выведены с указанием nan")
             card_df = fd[fd["Номер карты"].isna()]
         else:
             card_df = fd[fd["Номер карты"] == card]
@@ -49,6 +55,7 @@ def filter_card(date_and_time):
             "total_spent": total_spent,
             "cashback": cashback
         })
+    logger.info("Функция отфильтровала данные по картам и вернула результат в виде словаря данных")
     return cards_data
 
 

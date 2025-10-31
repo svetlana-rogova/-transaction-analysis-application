@@ -1,21 +1,27 @@
 import json
 import os
+import re
 
+from logger_config import logger_setting
 from src.utils import read_excel
+
+logger = logger_setting("services")
 
 file = os.path.join(os.path.dirname(__file__), "..", "data", "operations.xlsx")
 transactions = read_excel(file)
+dict_transactions = transactions.to_dict(orient="records")
 
 file_people = os.path.join(os.path.dirname(__file__), "..", "data", "file_people.json")
 
 
-def transaction_person(transactions):
+def transaction_person(dict_transactions):
     """Функция для вывода всех переводов физическим лицам"""
-    filtered = transactions[transactions["Категория"] == "Переводы"]
-    filter_transactions = filtered[filtered["Описание"].str.match(r"^[А-ЯЁA-Z][а-яёa-z]+\s[А-ЯЁA-Z]\.$", na=False)]
-    filter_dict = filter_transactions.to_dict(orient="records")
+    filtered = [transact for transact in dict_transactions if transact["Категория"] == "Переводы"]
+    pattern = r"^[А-ЯЁA-Z][а-яёa-z]+\s[А-ЯЁA-Z]\.$"
+    filtered_people = [transact for transact in filtered if re.match(pattern, transact["Описание"])]
     with open(os.path.join(os.path.dirname(__file__), "..", "data", "file_people.json"), "w", encoding="utf-8") as f:
-        json.dump(filter_dict, f, ensure_ascii=False, indent=4)
+        json.dump(filtered_people, f, ensure_ascii=False, indent=4)
+        logger.info("Файл 'file_people.json' создан и в него записаны данные о переводах физическим лицам")
 
 
-print(transaction_person(transactions))
+print(transaction_person(dict_transactions))
