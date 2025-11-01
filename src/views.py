@@ -5,7 +5,7 @@ import pandas as pd
 import requests
 from dotenv import load_dotenv
 
-from logger_config import logger_setting
+from src.logger_config import logger_setting
 from src.utils import open_user_setting, read_excel, welcome_message
 
 logger = logger_setting("views")
@@ -89,7 +89,7 @@ currencies, stocks = open_user_setting()
 
 
 def request_currencies():
-    """Получаем ценs акций из пользовательского списка"""
+    """Получаем цены акций из пользовательского списка"""
     company_rate = []
     for company in stocks:
         url = f'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol={company}&apikey=headers'
@@ -119,12 +119,14 @@ def currency_rate():
     return list_currency
 
 
-result = {
-    "greeting": welcome_message(),
-    "cards": filter_card(date_and_time),
-    "top_transactions": top_five_transactions(date_and_time),
-    "currency_rates": currency_rate(),
-    "stock_prices": request_currencies()
+def generation_rusult():
+    """Функция формирует итоговый словарь отчета с данными за указанную дату"""
+    result = {
+        "greeting": welcome_message(),
+        "cards": filter_card(date_and_time),
+        "top_transactions": top_five_transactions(date_and_time),
+        "currency_rates": currency_rate(),
+        "stock_prices": request_currencies()
 
-}
-print(result)
+    }
+    return result

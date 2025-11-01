@@ -4,10 +4,13 @@ from typing import Optional
 
 import pandas as pd
 
+from src.logger_config import logger_setting
 from src.utils import decorator_write, read_excel
 
 file = os.path.join(os.path.dirname(__file__), "..", "data", "operations.xlsx")
 transactions = read_excel(file)
+
+logger = logger_setting("reports")
 
 
 @decorator_write
@@ -16,7 +19,9 @@ def spending_by_category(transactions: pd.DataFrame, category: str, date: Option
     if date:
         end_data = ((datetime.strptime(date, "%d.%m.%Y"))).replace(hour=23, minute=59, second=59)
         start = (end_data - timedelta(days=90)).replace(hour=0, minute=0, second=0)
+        logger.info("Для вычсиления трат по категории ипользуется переданное время")
     else:
+        logger.info("Для вычсиления трат по категории ипользуется текущее время")
         end_data = datetime.now()
         start = (end_data - timedelta(days=90)).replace(hour=0, minute=0, second=0)
 
@@ -26,6 +31,8 @@ def spending_by_category(transactions: pd.DataFrame, category: str, date: Option
     wastes = filtered[filtered["Сумма платежа"] < 0]
     wastes_date = wastes[(wastes["Дата операции"] >= start) & (wastes["Дата операции"] <= end_data)]
     group = wastes_date.groupby("Дата операции", as_index=False).agg({"Сумма платежа": "mean", "Категория": "first"})
+    logger.info("Список отформатирован и выводится в виде DataFrame с колонками: "
+                "Дата операции, Сумма платежа и Категория")
     return group
 
 

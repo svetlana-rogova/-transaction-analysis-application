@@ -2,7 +2,7 @@ import json
 import os
 import re
 
-from logger_config import logger_setting
+from src.logger_config import logger_setting
 from src.utils import read_excel
 
 logger = logger_setting("services")
@@ -22,6 +22,7 @@ def transaction_person(dict_transactions):
     with open(os.path.join(os.path.dirname(__file__), "..", "data", "file_people.json"), "w", encoding="utf-8") as f:
         json.dump(filtered_people, f, ensure_ascii=False, indent=4)
         logger.info("Файл 'file_people.json' создан и в него записаны данные о переводах физическим лицам")
+    return filtered_people
 
 
-print(transaction_person(dict_transactions))
+print(dict_transactions)

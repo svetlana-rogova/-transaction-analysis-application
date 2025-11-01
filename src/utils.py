@@ -4,7 +4,7 @@ from datetime import datetime
 
 import pandas as pd
 
-from logger_config import logger_setting
+from src.logger_config import logger_setting
 
 logger = logger_setting("utils")
 
@@ -67,4 +67,5 @@ def decorator_write(func):
         with open(file_inf, "w", encoding="utf-8") as f:
             f.write(write_file)
             logger.info("Файл создан и в него записаны необходимые данные")
+            return write_file
     return wrapper
