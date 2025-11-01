@@ -28,11 +28,11 @@ def spending_by_category(transactions: pd.DataFrame, category: str, date: Option
     filtered = transactions[transactions["Категория"] == category]
     filtered = filtered.copy()
     filtered["Дата операции"] = pd.to_datetime(filtered["Дата операции"], format="%d.%m.%Y %H:%M:%S")
-    wastes = filtered[filtered["Сумма платежа"] < 0]
+    wastes = filtered[filtered["Сумма операции"] < 0]
     wastes_date = wastes[(wastes["Дата операции"] >= start) & (wastes["Дата операции"] <= end_data)]
-    group = wastes_date.groupby("Дата операции", as_index=False).agg({"Сумма платежа": "mean", "Категория": "first"})
+    group = wastes_date.groupby("Дата операции", as_index=False).agg({"Сумма операции": "mean", "Категория": "first"})
     logger.info("Список отформатирован и выводится в виде DataFrame с колонками: "
-                "Дата операции, Сумма платежа и Категория")
+                "Дата операции, Сумма операции и Категория")
     return group
 
 

@@ -1,7 +1,9 @@
-from src.utils import read_excel, welcome_message, open_user_setting
-from unittest.mock import patch, mock_open
-from freezegun import freeze_time
 import json
+from unittest.mock import mock_open, patch
+
+from freezegun import freeze_time
+
+from src.utils import open_user_setting, read_excel, welcome_message
 
 
 @patch("pandas.read_excel")
@@ -25,4 +27,3 @@ def test_open_user_setting():
         result = open_user_setting()
 
     assert result == (["USD", "EUR"], ["AAPL", "AMZN"])
-

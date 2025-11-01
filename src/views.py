@@ -65,14 +65,14 @@ def filter_card(date_and_time):
 def top_five_transactions(date_and_time):
     """Функция возвращает список словарей с топ 5 категорий по сумме трат"""
     fd = filter_date(date_and_time)
-    transactions_df = fd.groupby(["Категория", "Описание", "Дата платежа"])["Сумма операции с округлением"].sum()
+    transactions_df = fd.groupby(["Категория", "Описание", "Дата операции"])["Сумма операции с округлением"].sum()
     sort_transactions_df = transactions_df.sort_values(ascending=False)
     top_five = sort_transactions_df.head().reset_index()
     dict_top_five = top_five.to_dict(orient='records')
     conclusion = []
     for date in dict_top_five:
         conclusion.append({
-            "date": date['Дата платежа'],
+            "date": date['Дата операции'],
             "amount": date['Сумма операции с округлением'],
             "category": date['Категория'],
             "description": date['Описание']

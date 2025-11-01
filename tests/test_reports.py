@@ -11,6 +11,6 @@ def tests_spending_by_category(sample_transactions):
         row = json.loads(data_transact)
     assert row[0] == {
         "Дата операции": "01.01.2023 10:00:00",
-        "Сумма платежа": -100.0,
+        "Сумма операции": -100.0,
         "Категория": "Супермаркеты"
     }
