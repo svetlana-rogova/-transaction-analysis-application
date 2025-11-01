@@ -34,6 +34,3 @@ def spending_by_category(transactions: pd.DataFrame, category: str, date: Option
     logger.info("Список отформатирован и выводится в виде DataFrame с колонками: "
                 "Дата операции, Сумма операции и Категория")
     return group
-
-
-print(spending_by_category(transactions, "Связь", "21.10.2018"))

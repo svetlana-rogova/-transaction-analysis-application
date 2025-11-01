@@ -23,6 +23,3 @@ def transaction_person(dict_transactions):
         json.dump(filtered_people, f, ensure_ascii=False, indent=4)
         logger.info("Файл 'file_people.json' создан и в него записаны данные о переводах физическим лицам")
     return filtered_people
-
-
-print(dict_transactions)

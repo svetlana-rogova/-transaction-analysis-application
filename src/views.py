@@ -6,11 +6,10 @@ import requests
 from dotenv import load_dotenv
 
 from src.logger_config import logger_setting
-from src.utils import open_user_setting, read_excel, welcome_message
+from src.utils import open_user_setting, read_excel
 
 logger = logger_setting("views")
 
-date_and_time = "04.10.2021 12:10:06"
 file = os.path.join(os.path.dirname(__file__), "..", "data", "operations.xlsx")
 df = read_excel(file)
 
@@ -120,16 +119,3 @@ def currency_rate():
         else:
             return f"Ошибка {response.status_code}"
     return list_currency
-
-
-def generation_rusult():
-    """Функция формирует итоговый словарь отчета с данными за указанную дату"""
-    result = {
-        "greeting": welcome_message(),
-        "cards": filter_card(date_and_time),
-        "top_transactions": top_five_transactions(date_and_time),
-        "currency_rates": currency_rate(),
-        "stock_prices": request_currencies()
-
-    }
-    return result

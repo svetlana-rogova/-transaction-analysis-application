@@ -3,14 +3,8 @@ from unittest.mock import patch
 
 import pytest
 
-from src.views import (
-    currency_rate,
-    filter_card,
-    filter_date,
-    get_date_interval,
-    request_currencies,
-    top_five_transactions,
-)
+from src.views import (currency_rate, filter_card, filter_date, get_date_interval, request_currencies,
+                       top_five_transactions)
 
 
 @pytest.mark.parametrize(
