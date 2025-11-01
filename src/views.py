@@ -16,8 +16,11 @@ df = read_excel(file)
 
 
 def get_date_interval(date_and_time):
-    """Функция рассчитывает нужный интервал, получая дату"""
-    end = datetime.strptime(date_and_time, "%d.%m.%Y %H:%M:%S")
+    """Функция рассчитывает интервал от начала месяца до полученной даты"""
+    try:
+        end = datetime.strptime(date_and_time, "%d.%m.%Y %H:%M:%S")
+    except ValueError:
+        end = datetime.strptime(date_and_time, "%d.%m.%Y")
     end = end.replace(hour=23, minute=59, second=59)
     start = end.replace(day=1, hour=0, minute=0, second=0)
     dates = start, end

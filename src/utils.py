@@ -42,7 +42,7 @@ def welcome_message():
 
 def open_user_setting():
     """Открываем json файл и заносим данные из него в отдельные переменные, которые будут содержать валюты и фонды"""
-    file = os.path.join(os.path.dirname(__file__), "..", "user_settings.json")
+    file = os.path.join(os.path.dirname(__file__), "..", "data", "user_settings.json")
     try:
         with open(file, "r", encoding="utf-8") as f:
             user_settings = json.load(f)
